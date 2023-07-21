@@ -2,10 +2,13 @@
 
 @section('content')
 <div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
+    <div class="row justify-content-left">
+        @foreach ($classes as $class)
+        <div class="col-md-3">
             <div class="card">
-                <div class="card-header">{{ __('Dashboard') }}</div>
+                <a href="/c/{{$class[0]->uuid}}">
+                    <div class="card-header"> {{ $class[0]->className }} </div>
+                </a>
 
                 <div class="card-body">
                     @if (session('status'))
@@ -13,11 +16,10 @@
                             {{ session('status') }}
                         </div>
                     @endif
-
-                    {{ __('You are logged in!') }}
                 </div>
             </div>
         </div>
+        @endforeach
     </div>
 </div>
 @endsection

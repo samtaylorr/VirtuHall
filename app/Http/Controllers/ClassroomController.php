@@ -26,18 +26,21 @@ class ClassroomController
             'room' => $request->room
         ]);
 
-        return view('home');
+        return HomeController::Home();
     }
 
     function join(Request $request)
     {
-        Classroom::findOrFail($request->classId);
+        $user = $request->user()->id;
+        $classroom = Classroom::where('uuid', '=', $request->classId)->get();
+        $classroom = $classroom[0];
+
         UsersInClassrooms::firstOrCreate([
             'userId' => $request->user()->id,
-            'classId' => $request->classId,
+            'classId' => $classroom->id,
         ]);
 
-        return view('home');
+        return HomeController::Home();
     }
 
     /**
@@ -47,25 +50,27 @@ class ClassroomController
      */
     public function index()
     {
-        return view('home');
+        return HomeController::Home();
     }
 
     public function getClass(Request $request, $class = null){
         $user = $request->user()->id;
+        $classroom = Classroom::where('uuid', '=', $class)->get();
+        $classroom = $classroom[0];
 
         $results = UsersInClassrooms::where('userId', '=', $user)
-            ->where('classId', '=', $class)->count();
+            ->where('classId', '=', $classroom->id)->count();
 
         if($results > 0) {
-            $classroom = Classroom::findOrFail($class);
             return view('class.class')
                 ->with("className", $classroom->className)
                 ->with("ownerId",    $classroom->ownerId)
                 ->with("section",    $classroom->section)
                 ->with("subject",    $classroom->subject)
-                ->with("room",          $classroom->room);
+                ->with("room",          $classroom->room)
+                ->with("uuid",          $classroom->uuid);
         } else {
-            return view('home');
+            return HomeController::Home();
         }
     }
 }
