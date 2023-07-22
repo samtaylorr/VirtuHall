@@ -17,5 +17,5 @@ class Classroom extends Model
      * @var string
      * @var string
      */
-    protected $fillable = ['className', 'ownerId', 'uuid', 'section','subject', "room"];
+    protected $fillable = ['className', 'ownerId', 'uuid', 'section','subject', "room", "linkingCode"];
 }

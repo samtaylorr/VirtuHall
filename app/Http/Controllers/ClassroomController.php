@@ -21,6 +21,7 @@ class ClassroomController
             'ownerId' => $request->user()->id,
             'className' => $request->className,
             'uuid' => Uuid::uuid4(),
+            'linkingCode' => bin2hex(random_bytes(4)),
             'section' => $request->section,
             'subject' => $request->subject,
             'room' => $request->room
@@ -32,7 +33,7 @@ class ClassroomController
     function join(Request $request)
     {
         $user = $request->user()->id;
-        $classroom = Classroom::where('uuid', '=', $request->classId)->get();
+        $classroom = Classroom::where('linkingCode', '=', $request->classId)->get();
         $classroom = $classroom[0];
 
         UsersInClassrooms::firstOrCreate([
@@ -63,12 +64,13 @@ class ClassroomController
 
         if($results > 0) {
             return view('class.class')
-                ->with("className", $classroom->className)
-                ->with("ownerId",    $classroom->ownerId)
-                ->with("section",    $classroom->section)
-                ->with("subject",    $classroom->subject)
-                ->with("room",          $classroom->room)
-                ->with("uuid",          $classroom->uuid);
+                ->with("className",   $classroom->className)
+                ->with("linkingCode", $classroom->linkingCode)
+                ->with("ownerId",     $classroom->ownerId)
+                ->with("section",     $classroom->section)
+                ->with("subject",     $classroom->subject)
+                ->with("room",        $classroom->room)
+                ->with("uuid",        $classroom->uuid);
         } else {
             return HomeController::Home();
         }

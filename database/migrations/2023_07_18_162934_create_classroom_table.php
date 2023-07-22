@@ -16,6 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('ownerId');
             $table->string('className');
             $table->uuid("uuid");
+            $table->uuid("linkingCode");
             $table->string('section')->nullable();
             $table->string('subject')->nullable();
             $table->string('room')->nullable();
