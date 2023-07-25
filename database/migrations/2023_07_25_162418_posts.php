@@ -11,10 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users_in_classrooms', function (Blueprint $table) {
+        Schema::create('posts', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('userId');
             $table->unsignedBigInteger('classId');
+            $table->string('post');
+            $table->string('file');
             $table->timestamps();
 
             $table->foreign('userId')->references('id')->on('users');
@@ -27,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('usersinclassrooms');
+        //
     }
 };

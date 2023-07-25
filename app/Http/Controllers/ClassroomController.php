@@ -3,7 +3,9 @@
 
 namespace App\Http\Controllers;
 use App\Models\Classroom;
+use App\Models\Posts;
 use App\Models\UsersInClassrooms;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Ramsey\Uuid\Uuid;
 
@@ -17,7 +19,7 @@ class ClassroomController
      */
     function create(Request $request)
     {
-        Classroom::firstOrCreate([
+        $class = Classroom::firstOrCreate([
             'ownerId' => $request->user()->id,
             'className' => $request->className,
             'uuid' => Uuid::uuid4(),
@@ -25,6 +27,11 @@ class ClassroomController
             'section' => $request->section,
             'subject' => $request->subject,
             'room' => $request->room
+        ]);
+
+        UsersInClassrooms::firstOrCreate([
+            'userId' => $request->user()->id,
+            'classId' => $class->id
         ]);
 
         return HomeController::Home();
@@ -62,15 +69,31 @@ class ClassroomController
         $results = UsersInClassrooms::where('userId', '=', $user)
             ->where('classId', '=', $classroom->id)->count();
 
+        $posts = Posts::orderBy('id', 'DESC')
+        ->where('classId', '=', $classroom->id)
+        ->paginate(15);
+        
+        $users = [];
+        $i=0;
+        
+        foreach ($posts as $post) {
+            $users[$i] = User::find($post->userId)->name;
+            $i++;
+        }
+
         if($results > 0) {
             return view('class.class')
+                ->with("posts",       $posts)
+                ->with("id",          $classroom->id)
                 ->with("className",   $classroom->className)
                 ->with("linkingCode", $classroom->linkingCode)
                 ->with("ownerId",     $classroom->ownerId)
                 ->with("section",     $classroom->section)
                 ->with("subject",     $classroom->subject)
                 ->with("room",        $classroom->room)
-                ->with("uuid",        $classroom->uuid);
+                ->with("uuid",        $classroom->uuid)
+                ->with("users",       $users)
+                ->with("i",           0);
         } else {
             return HomeController::Home();
         }
