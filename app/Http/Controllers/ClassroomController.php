@@ -56,6 +56,7 @@ class ClassroomController
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
+
     public function index()
     {
         return HomeController::Home();
@@ -83,17 +84,19 @@ class ClassroomController
 
         if($results > 0) {
             return view('class.class')
-                ->with("posts",       $posts)
-                ->with("id",          $classroom->id)
-                ->with("className",   $classroom->className)
-                ->with("linkingCode", $classroom->linkingCode)
-                ->with("ownerId",     $classroom->ownerId)
-                ->with("section",     $classroom->section)
-                ->with("subject",     $classroom->subject)
-                ->with("room",        $classroom->room)
-                ->with("uuid",        $classroom->uuid)
-                ->with("users",       $users)
-                ->with("i",           0);
+                ->with("posts",       $posts                            )
+                ->with("id",          $classroom->id                    )
+                ->with("className",   $classroom->className             )
+                ->with("linkingCode", $classroom->linkingCode           )
+                ->with("ownerId",     $classroom->ownerId               )
+                ->with("isOwner",    ($classroom->ownerId == $user)     )
+                ->with("section",     $classroom->section               )
+                ->with("subject",     $classroom->subject               )
+                ->with("room",        $classroom->room                  )
+                ->with("uuid",        $classroom->uuid                  )
+                ->with("users",       $users                            )
+                ->with("i",           0                                 )
+                ->with("secondaryNav",1                                 );
         } else {
             return HomeController::Home();
         }

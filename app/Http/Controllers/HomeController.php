@@ -22,7 +22,6 @@ class HomeController extends Controller
      */
     public static function Home(){
         $classes = [];
-
         if (\Auth::check())
         {
             $user = \Auth::id();

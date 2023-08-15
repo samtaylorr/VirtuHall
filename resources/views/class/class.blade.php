@@ -1,4 +1,21 @@
 @extends('layouts.app')
+
+@section('nav')
+    <nav style="color: aqua" class="navbar justify-content-center navbar-expand-md navbar-light bg-white shadow-sm">
+        <div class="justify-content-center container">
+            <a class="navbar-brand" href="{{ url('/c/' . $uuid . '/#') }}">
+                Stream
+            </a>
+            <a class="navbar-brand" href="{{ url('/c/' . $uuid . '/assignments') }}">
+                Assignments
+            </a>
+            <a class="navbar-brand" href="{{ url('/c/' . $uuid . '/announcements') }}">
+                Announcements
+            </a>
+        </div>
+    </nav>
+@endsection
+
 @section('content')
     <div class="container">
         <div class="row justify-content-center">
@@ -10,12 +27,21 @@
         </div>
         <p></p>
         <div class="row justify-content-left">
-            <div class="col-md-2">
-                <div class="card">
-                    <div class="card-header">{{ __("Linking Code") }}</div>
-                    <div class="card-body">{{ $linkingCode }}</div>
+            @if ($isOwner)
+                <div class="col-md-2">
+                    <div class="card">
+                        <div class="card-header">{{ __("Linking Code") }}</div>
+                        <div class="card-body">{{ $linkingCode }}</div>
+                    </div>
                 </div>
-            </div>
+            @else
+                <div class="col-md-2">
+                    <div class="card">
+                        <div class="card-header">{{ __("Upcoming Assignments") }}</div>
+                        <div class="card-body">Feature to be added soon</div>
+                    </div>
+                </div>
+            @endif
             <div class="col-md-10">
                 <div class="card">
                     <div class="card-header">{{ __("Post an announcement") }}</div>
